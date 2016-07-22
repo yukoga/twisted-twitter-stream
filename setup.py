@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name="TwistedTwitterStream",
-    version="0.0.1",
+    version="0.0.2",
     description="Twisted client library for the Twitter Streaming API",
     author="Alexandre Fiori",
     url="http://github.com/fiorix/twisted-twitter-stream",
