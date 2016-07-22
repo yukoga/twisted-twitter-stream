@@ -20,7 +20,14 @@ __version__ = "0.0.2"
 """Twisted client library for the Twitter Streaming API:
 http://apiwiki.twitter.com/Streaming-API-Documentation"""
 
-import base64, urllib
+import base64
+try:
+    # Python 2
+    from urllib2 import quote
+except ImportError:
+    # Python 3+
+    from urllib.parse import quote
+
 from twisted.protocols import basic
 from twisted.internet import defer, reactor, protocol
 
@@ -141,7 +148,7 @@ class _TwitterStreamFactory(protocol.ReconnectingClientFactory):
             ]
             self.header = "\r\n".join(header) + "\r\n\r\n" + postdata
 
- 
+
 def firehose(username, password, consumer):
     tw = _TwitterStreamFactory(consumer)
     tw.make_header(username, password, "GET", "/1/statuses/firehose.json")
@@ -160,13 +167,13 @@ def sample(username, password, consumer):
 def filter(username, password, consumer, count=0, delimited=0, track=[], follow=[]):
     qs = []
     if count:
-        qs.append("count=%s" % urllib.quote(count))
+        qs.append("count=%s" % quote(count))
     if delimited:
         qs.append("delimited=%d" % delimited)
     if follow:
         qs.append("follow=%s" % ",".join(follow))
     if track:
-        qs.append("track=%s" % ",".join([urllib.quote(s) for s in track]))
+        qs.append("track=%s" % ",".join([quote(s) for s in track]))
 
     if not (track or follow):
         raise RuntimeError("At least one parameter is required: track or follow")
